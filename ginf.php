@@ -41,7 +41,8 @@ exit$white            exit the ginf$normal\n\n";
 echo $banner;
 echo "$whiteBold       Type $cyanBold'help'$whiteBold for more information$normal\n\n";
 while (True) {
-	echo $cyanBold."ginf$white> ";$userInput = trim(fgets(STDIN));
+	$userInput = readline($cyanBold."ginf$white> ");
+	readline_add_history($userInput);
 	if($userInput == "help") {
 		echo $help;
 	} elseif($userInput == "clear") {
@@ -51,7 +52,7 @@ while (True) {
 	} elseif($userInput == "getuser") {
 		echo "Usage: getuser <username>\n";
 	} elseif($userInput == "getrepos") {
-		echo "Usage: getrepos <username>\n";
+		echo "Usage: getrepos <username> [<reponame>]\n";
 	} elseif($userInput == "getfower") {
 		echo "Usage: getfower <username>\n";
 	} elseif($userInput == "getfowin") {
@@ -100,7 +101,7 @@ while (True) {
 		}
 	} elseif(preg_match('/getrepos/', $userInput)) {
 		if(explode(' ', $userInput)[0] == "getrepos" && count(explode(' ', $userInput)) == 2) {
-			$url = "https://api.github.com/users/".explode(' ', $userInput)[1]."/repos";
+			$url = "https://api.github.com/users/".explode(' ', $userInput)[1]."/repos?per_page=999";
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -142,12 +143,57 @@ while (True) {
 			} else {
 				echo "[!] NetworkError: network is unreachable\n";
 			}
+		} elseif(explode(' ', $userInput)[0] == "getrepos" && count(explode(' ', $userInput)) == 3) {
+			$url = "https://api.github.com/users/".explode(' ', $userInput)[1]."/repos?per_page=999";
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+			curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+			$res = curl_exec($ch);
+			curl_close($ch);
+			if($res != NULL && count(explode(' ', $res)) != 1) {
+				$data = json_decode($res, 1);
+				echo "\n[+] Repos Information\n";
+				for($x = 0;$x < count($data);$x++) {
+					if($data[$x]["name"] == explode(' ', $userInput)[2]) {
+						echo "id: ".$data[$x]["id"]."\n";
+						echo "node id: ".$data[$x]["node_id"]."\n";
+						echo "name: ".$data[$x]["name"]."\n";
+						echo "full name: ".$data[$x]["full_name"]."\n";
+						echo "owner: ".$data[$x]["owner"]["login"]."\n";
+						echo "private: ".$data[$x]["private"]."\n";
+						echo "html url: ".$data[$x]["html_url"]."\n";
+						echo "description: ".$data[$x]["description"]."\n";
+						echo "fork: ".$data[$x]["fork"]."\n";
+						echo "homepage: ".$data[$x]["homepage"]."\n";
+						echo "size: ".$data[$x]["size"]."\n";
+						echo "startgazer(s): ".$data[$x]["startgazers_count"]."\n";
+						echo "watcher(s): ".$data[$x]["watchers"]."\n";
+						echo "language: ".$data[$x]["language"]."\n";
+						echo "issues: ".$data[$x]["has_issues"]."\n";
+						echo "projects: ".$data[$x]["has_projects"]."\n";
+						echo "downloads: ".$data[$x]["has_downloads"]."\n";
+						echo "wiki: ".$data[$x]["has_wiki"]."\n";
+						echo "pages: ".$data[$x]["has_pages"]."\n";
+						echo "mirror url: ".$data[$x]["mirror_url"]."\n";
+						echo "archived: ".$data[$x]["archived"]."\n";
+						echo "license: ".$data[$x]["license"]."\n";
+						echo "forks: ".$data[$x]["forks"]."\n";
+						echo "open issues: ".$data[$x]["open_issues"]."\n";
+						echo "default branch: ".$data[$x]["default_branch"]."\n\n";
+					}
+				}
+			} else {
+				echo "[!] NetworkError: network is unreachable\n";
+			}
 		} else {
 			//pass
 		}
 	} elseif(preg_match('/getfower/', $userInput)) {
 		if(explode(' ', $userInput)[0] == "getfower" && count(explode(' ', $userInput)) == 2) {
-			$url = "https://api.github.com/users/".explode(' ', $userInput)[1]."/followers";
+			$url = "https://api.github.com/users/".explode(' ', $userInput)[1]."/followers?per_page=999";
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -177,7 +223,7 @@ while (True) {
 		}
 	} elseif(preg_match('/getfowin/', $userInput)) {
 		if(explode(' ', $userInput)[0] == "getfowin" && count(explode(' ', $userInput)) == 2) {
-			$url = "https://api.github.com/users/".explode(' ', $userInput)[1]."/following";
+			$url = "https://api.github.com/users/".explode(' ', $userInput)[1]."/following?per_page=999";
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
