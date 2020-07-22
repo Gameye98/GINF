@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /* GINF - GitHub Information Gathering
  * author: DedSecTL
