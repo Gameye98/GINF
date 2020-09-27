@@ -126,7 +126,7 @@ while (True) {
 					echo "fork: ".$data[$x]["fork"]."\n";
 					echo "homepage: ".$data[$x]["homepage"]."\n";
 					echo "size: ".$data[$x]["size"]."\n";
-					echo "startgazer(s): ".$data[$x]["startgazers_count"]."\n";
+					echo "stargazer(s): ".$data[$x]["stargazers_count"]."\n";
 					echo "watcher(s): ".$data[$x]["watchers"]."\n";
 					echo "language: ".$data[$x]["language"]."\n";
 					echo "issues: ".$data[$x]["has_issues"]."\n";
@@ -170,7 +170,7 @@ while (True) {
 						echo "fork: ".$data[$x]["fork"]."\n";
 						echo "homepage: ".$data[$x]["homepage"]."\n";
 						echo "size: ".$data[$x]["size"]."\n";
-						echo "startgazer(s): ".$data[$x]["startgazers_count"]."\n";
+						echo "stargazer(s): ".$data[$x]["stargazers_count"]."\n";
 						echo "watcher(s): ".$data[$x]["watchers"]."\n";
 						echo "language: ".$data[$x]["language"]."\n";
 						echo "issues: ".$data[$x]["has_issues"]."\n";
