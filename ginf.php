@@ -37,14 +37,14 @@ getuser$white         get user information$cyan
 getrepos$white        get repos information$cyan
 getfower$white        get follower information$cyan
 getfowin$white        get following information$cyan
+readme$white          print README.md to stdout$cyan
 about$white           about this program$cyan
 exit$white            exit the ginf$normal\n\n";
-echo $banner;
-echo "$whiteBold       Type $cyanBold'help'$whiteBold for more information$normal\n\n";
-while (True) {
-	$userInput = readline($cyanBold."ginf$white> ");
-	readline_add_history($userInput);
-	if($userInput == "help") {
+system("clear");
+function cmdexec($userInput) {
+    global $red,$yellow,$whiteBold,$white,$cyan,$cyanBold,$normal;
+    global $ua,$banner,$about,$help;
+    if($userInput == "help") {
 		echo $help;
 	} elseif($userInput == "clear") {
 		system("clear");
@@ -250,13 +250,48 @@ while (True) {
 				echo "[!] NetworkError: network is unreachable\n";
 			}
 		} else {
-			//pass
+			
 		}
+	} elseif(preg_match('/readme/', $userInput)) {
+	    if(explode(' ', $userInput)[0] == "readme" && count(explode(' ', $userInput)) == 3) {
+	        $url = "https://raw.githubusercontent.com/".explode(" ", $userInput)[1]."/".explode(" ", $userInput)[2]."/master/README.md";
+	        $ch = curl_init();
+	        curl_setopt($ch, CURLOPT_URL, $url);
+	        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+	        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+	        curl_setopt($ch, CURLOPT_USERAGENT, $ua);
+	        $res = curl_exec($ch);
+	        curl_close($ch);
+	        if($res != NULL && count(explode(" ", $res)) != 1) {
+	            echo $res."\n";
+	        } else {
+	            // network is unreachable
+	        }
+	    } else {
+	        
+	    }
+	} elseif(substr($userInput, 0, 19) == "https://github.com/") {
+	    $url = substr($userInput,19,strlen($userInput));
+	    if(substr($url, strlen($url)-4, strlen($url)) == ".git") {
+	        $url = substr($url, 0, strlen($url)-4);
+	    }
+	    $users = explode("/", $url)[0];
+	    $repos = explode("/", $url)[1];
+	    cmdexec("getrepos ".$users." ".$repos);
 	} elseif($userInput == "about") {
 		echo $about;
 	} elseif($userInput == "exit" || $userInput == "quit") {
-		echo $normal;break;
+		echo $normal;
+		exit();
 	} else {
-		//pass
+	    echo "\x1b[1;93;41mginf: ".$userInput.": Wrong command\x1b[0m\n";
 	}
+}
+echo $banner;
+echo "$whiteBold       Type $cyanBold'help'$whiteBold for more information$normal\n\n";
+while (True) {
+	$userInput = readline($cyanBold."ginf$white> ");
+	readline_add_history($userInput);
+	cmdexec($userInput);
 }
