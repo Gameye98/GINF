@@ -23,9 +23,9 @@ About
 -----
 GINF - Github Information Gathering
 Author : DedSecTL <dtlily>
-Version : 1.0
+Version : 1.2
 Team : BlackHole Security
-Date : Fri Aug 17 07:48:19 2018
+Date : Mon Jul 19 21:01:48 2021 
 Telegram : @dtlily
 Line : dtl.lily$normal\n\n";
 $help = "$white
